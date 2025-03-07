@@ -1,0 +1,164 @@
+:root {
+  --clr-bg: #111;
+  --clr-fg: #fafafa;
+}
+
+body {
+  background: var(--clr-bg);
+  color: var(--clr-fg);
+
+  font-family: sans-serif;
+
+  *:focus {
+    outline: none;
+  }
+}
+
+// Wrapper
+[data-vf-wrapper] {
+  padding: 15px 0px 100px 40px;
+}
+
+.vf-tools {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+
+  z-index: 10;
+
+  width: 100%;
+  display: flex;
+  gap: 20px;
+
+  align-items: center;
+
+  padding: 15px 40px;
+
+  background: var(--clr-bg);
+  box-shadow: 0px 0px 0px 2px var(--clr-fg);
+
+  .vf-tool.vf-palette {
+    display: flex;
+    margin-left: auto;
+
+    .vf-palette-form {
+      display: flex;
+      gap: 20px;
+    }
+
+    .vf-palette-input {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+
+      [type="color"] {
+        padding: 0;
+        outline: unset;
+        border: 2px solid white;
+        box-shadow: 0px 0px 0px 2px black;
+        appearance: none;
+
+        cursor: pointer;
+      }
+    }
+  }
+}
+
+// Examples core
+
+.vf-ex {
+  padding-top: 20px;
+  padding-bottom: 40px;
+
+  border-bottom: 1px dotted var(--clr-fg);
+}
+
+.vf-ex-title {
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 12px;
+  font-weight: 300;
+
+  margin-bottom: 20px;
+
+  opacity: .55;
+}
+
+.vf-ex-settings {
+  display: flex;
+
+  gap: 20px;
+
+  position: relative;
+  z-index: 2;
+}
+
+// Example animation
+@keyframes variableFlow {
+  0% {
+    font-variation-settings: "wght" 0;
+  }
+  50% {
+    font-variation-settings: "wght" 700;
+  }
+
+  100% {
+    font-variation-settings: "wght" 0;
+  }
+}
+
+.vf-ex-1 {
+  overflow: hidden;
+
+
+  .vf-ex-1-sample {
+    display: block;
+
+    padding-top: 20px;
+
+    font-family: "TestFont";
+    font-variation-settings: "wght" 0;
+    font-size: 12vw;
+    line-height: .9;
+  }
+
+  &:has([name="vf-ex-1-anim"]:checked) {
+    .vf-ex-1-sample {
+      animation: variableFlow 6s infinite linear both;
+    }
+  }
+
+  &:has([name="vf-ex-1-linebreak"]:checked) {
+    .vf-ex-1-sample {
+      white-space: nowrap;
+    }
+  }
+}
+
+// Light font weight proof
+
+.vf-ex-2,
+.vf-ex-3 {
+  overflow: hidden;
+
+
+  .vf-ex-2-sample,
+  .vf-ex-3-sample {
+    display: block;
+
+    padding-top: 20px;
+
+    font-family: "TestFont";
+    font-size: 12vw;
+    line-height: .9;
+    font-variation-settings: "wght" var(--fw);
+  }
+
+  &:has([name="vf-ex-1-linebreak"]:checked) {
+    .vf-ex-2-sample,
+    .vf-ex-3-sample {
+      white-space: nowrap;
+    }
+  }
+
+}

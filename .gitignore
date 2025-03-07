@@ -1,14 +1,22 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-/node_modules
+node_modules/
+**/node_modules/
+package-lock.json
+**/package-lock.json
+yarn.lock
+**/yarn.lock
 
 # next.js
-/.next/
-/out/
+.next/
+**/out/
 
 # production
-/build
+build/
+**/build/
+dist/
+**/dist/
 
 # debug
 npm-debug.log*
@@ -18,10 +26,48 @@ yarn-error.log*
 
 # env files
 .env*
+**/.env*
 
 # vercel
-.vercel
+.vercel/
+**/.vercel/
 
 # typescript
 *.tsbuildinfo
-next-env.d.ts
+**/next-env.d.ts
+
+# macOS
+.DS_Store
+**/.DS_Store
+
+# VSCode
+.vscode/
+**/.vscode/
+
+# JetBrains IDEs
+.idea/
+**/.idea/
+
+# testing
+coverage/
+**/coverage/
+
+# cache directories
+.cache/
+**/.cache/
+.parcel-cache/
+**/.parcel-cache/
+
+# logs
+logs/
+**/logs/
+*.log
+
+# temporary files
+*.tmp
+**/temp/
+**/tmp/
+
+# Optional eslint cache
+.eslintcache
+**/.eslintcache

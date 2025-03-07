@@ -1,0 +1,23 @@
+{
+  "name": "headmaze",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev-old": "rm -rf ./dist/ && mkdir dist && cp -r assets ./dist/assets && npx parcel index.html --public-url='/'",
+    "dev": "npx parcel index.html --public-url='/'",
+    "dev-viz-1": "npx parcel viz-1.html --public-url='/'",
+    "build": "rm -rf ./dist/ && mkdir dist && cp -r assets ./dist/assets && npx parcel build *.html --public-url='/'",
+    "deploy": "git add . && git commit -m 'deploy' && git subtree push --prefix dist origin gh-pages",
+    "build-and-deploy": "npm run build && npm run deploy"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "parcel": "^2.4.0",
+    "randomcolor": "^0.6.2"
+  },
+  "devDependencies": {
+    "@parcel/transformer-sass": "^2.4.0"
+  }
+}
