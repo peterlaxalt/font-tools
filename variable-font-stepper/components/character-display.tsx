@@ -13,6 +13,7 @@ interface CharacterDisplayProps {
     css: string
   }[]
   backgroundColor: string
+  characterCSS: string
   globalCSS: string
 }
 
@@ -21,6 +22,7 @@ export default function CharacterDisplay({
   fontFamily,
   axes,
   backgroundColor,
+  characterCSS,
   globalCSS,
 }: CharacterDisplayProps) {
   // Generate character layers for each step of each axis
@@ -62,6 +64,17 @@ export default function CharacterDisplay({
           }
         })
 
+        // Parse and apply character-specific CSS
+        const parsedCharacterCSS: Record<string, string> = {}
+        characterCSS.split(";").forEach((rule) => {
+          const [property, value] = rule.split(":").map((s) => s.trim())
+          if (property && value) {
+            // Convert kebab-case to camelCase for React
+            const camelProperty = property.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase())
+            parsedCharacterCSS[camelProperty] = value
+          }
+        })
+
         // Parse and apply global CSS
         const parsedGlobalCSS: Record<string, string> = {}
         globalCSS.split(";").forEach((rule) => {
@@ -74,7 +87,15 @@ export default function CharacterDisplay({
         })
 
         layers.push(
-          <div key={`${axis.id}-${i}`} style={{ ...style, ...parsedCSS, ...parsedGlobalCSS }}>
+          <div
+            key={`${axis.id}-${i}`}
+            style={{
+              ...style,
+              ...parsedCSS,
+              ...parsedCharacterCSS,
+              ...parsedGlobalCSS,
+            }}
+          >
             {character}
           </div>,
         )
