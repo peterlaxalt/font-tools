@@ -29,7 +29,7 @@ export default function Home() {
       css: "color: transparent; -webkit-text-stroke: 2px black; text-stroke: 2px black;",
     },
   ])
-  const [globalCSS, setGlobalCSS] = useState("font-size: 15vh;")
+  const [globalCSS, setGlobalCSS] = useState("font-size: 65vh;")
 
   // Store settings for each character
   const [characterSettings, setCharacterSettings] = useState<Record<string, CharacterConfig>>({
@@ -130,11 +130,9 @@ export default function Home() {
   const currentSettings = characterSettings[currentChar] || { backgroundColor: "#ffffff", css: "" }
 
   return (
-    <main className="min-h-screen p-8">
-      <h1 className={`text-3xl font-bold mb-6 ${inter.className}`}>Variable Font Visualizer</h1>
-
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div className={`md:col-span-1 space-y-6 bg-gray-50 p-6 rounded-lg ${inter.className}`}>
+    <main className="min-h-screen p-0">
+      <div className="grid grid-cols-[350px_1fr] gap-0">
+        <div className={`space-y-6 bg-gray-50 p-6 ${inter.className}`}>
           <div>
             <label htmlFor="characters" className="block text-sm font-medium mb-1">
               Characters
@@ -241,7 +239,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="md:col-span-2">
+        <div>
           <CharacterDisplay
             character={currentChar}
             fontFamily={fontFamily}

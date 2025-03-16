@@ -106,7 +106,7 @@ export default function CharacterDisplay({
   }
 
   return (
-    <div className="w-full h-[70vh] rounded-lg relative overflow-hidden" style={{ backgroundColor }}>
+    <div className="sticky top-1 w-full h-[100vh] overflow-hidden" style={{ backgroundColor }}>
       {generateCharacterLayers()}
     </div>
   )
