@@ -35,7 +35,7 @@ interface Settings {
 
 function FontTester(): JSX.Element {
   // State
-  const [text, setText] = useState<string>("Generic font tester")
+  const [text, setText] = useState<string>("STUDIO LAXALT")
   const [settings, setSettings] = useState<Settings>({
     weight: 450,
     letterSpacing: 0,
@@ -65,7 +65,7 @@ function FontTester(): JSX.Element {
 
   // Font settings configuration
   const fontSettings: Record<string, FontSetting> = {
-    weight: { name: "Weight", min: 100, max: 900, default: 450, step: 10 },
+    weight: { name: "Weight", min: 100, max: 999, default: 450, step: 1 },
     letterSpacing: { name: "Letter Spacing", min: -5, max: 10, default: 0, step: 0.1 },
     lineHeight: { name: "Line Height", min: 0.8, max: 2, default: 1.2, step: 0.05 },
   }
@@ -320,7 +320,7 @@ function FontTester(): JSX.Element {
 
   const textInputStyle: React.CSSProperties = {
     fontFamily: fontFamily,
-    fontWeight: settings.weight,
+    fontVariationSettings: `"wght" ${settings.weight}`,
     fontSize: `${fontSize}px`,
     fontStyle: fontStyle,
     letterSpacing: `${settings.letterSpacing}px`,
