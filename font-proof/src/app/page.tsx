@@ -52,12 +52,14 @@ export default function Home() {
   const [compareEnabled, setCompareEnabled] = useState(false);
   const [comparisonFont, setComparisonFont] = useState("Inter");
 
-  // Auto-select first font when uploaded
+  // Auto-select most recent font when uploaded
   useEffect(() => {
-    if (uploadedFonts.length > 0 && !activeFontId) {
-      setActiveFontId(uploadedFonts[0].id);
+    if (uploadedFonts.length > 0) {
+      // Always select the most recently uploaded font (last in array)
+      const mostRecentFont = uploadedFonts[uploadedFonts.length - 1];
+      setActiveFontId(mostRecentFont.id);
     }
-  }, [uploadedFonts, activeFontId]);
+  }, [uploadedFonts]);
 
   // Inject @font-face for all uploaded fonts
   useEffect(() => {
@@ -91,6 +93,58 @@ export default function Home() {
   const handleFontsUploaded = (newFonts: UploadedFont[]) => {
     setUploadedFonts((prev) => [...prev, ...newFonts]);
   };
+
+  // Global drag and drop handler
+  useEffect(() => {
+    const handleDragOver = (e: DragEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+    };
+
+    const handleDrop = async (e: DragEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const files = Array.from(e.dataTransfer?.files || []);
+      const fontFiles = files.filter(file =>
+        file.name.match(/\.(ttf|otf|woff|woff2)$/i)
+      );
+
+      if (fontFiles.length > 0) {
+        // Process font files similar to FontUpload component
+        const processedFonts: UploadedFont[] = await Promise.all(
+          fontFiles.map(async (file) => {
+            const dataUrl = await new Promise<string>((resolve) => {
+              const reader = new FileReader();
+              reader.onload = (e) => resolve(e.target?.result as string);
+              reader.readAsDataURL(file);
+            });
+
+            const sanitizedName = file.name.replace(/\.(ttf|otf|woff|woff2)$/i, '').replace(/[^a-zA-Z0-9-]/g, '');
+
+            return {
+              id: `${Date.now()}-${Math.random()}`,
+              name: file.name,
+              file,
+              fontFamily: sanitizedName,
+              dataUrl,
+              size: file.size,
+            };
+          })
+        );
+
+        handleFontsUploaded(processedFonts);
+      }
+    };
+
+    document.addEventListener('dragover', handleDragOver);
+    document.addEventListener('drop', handleDrop);
+
+    return () => {
+      document.removeEventListener('dragover', handleDragOver);
+      document.removeEventListener('drop', handleDrop);
+    };
+  }, []);
 
   const activeFont = uploadedFonts.find((f) => f.id === activeFontId);
 

@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ColorTheme } from '../../types';
 
 interface CharacterGridProps {
@@ -16,8 +16,66 @@ interface CharacterGridProps {
 export default function CharacterGrid({ characters, fontFamily, theme, compareEnabled, comparisonFont, columnCount, cellFontScale }: CharacterGridProps) {
   const [hoveredChar, setHoveredChar] = useState<string | null>(null);
   const [hoverPosition, setHoverPosition] = useState({ x: 0, y: 0 });
+  const [missingGlyphs, setMissingGlyphs] = useState<Set<string>>(new Set());
 
   const charArray = characters.split(/\s+/).filter(c => c.trim());
+
+  // Check if a glyph exists in the font
+  const hasGlyph = (char: string, font: string): boolean => {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return true;
+
+    const fontSize = 100;
+    canvas.width = fontSize * 2;
+    canvas.height = fontSize * 2;
+
+    // Draw with the font (wrap in quotes to handle font names with spaces)
+    ctx.font = `${fontSize}px "${font}"`;
+    ctx.fillText(char, 0, fontSize);
+    const fontData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+
+    // Clear and draw with fallback
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.font = `${fontSize}px serif`;
+    ctx.fillText(char, 0, fontSize);
+    const fallbackData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+
+    // Compare pixel data - look for any difference
+    let hasDifference = false;
+    for (let i = 0; i < fontData.length; i += 4) {
+      // Check alpha channel (every 4th value)
+      if (fontData[i + 3] !== fallbackData[i + 3]) {
+        hasDifference = true;
+        break;
+      }
+    }
+    return hasDifference;
+  };
+
+  // Detect missing glyphs on mount and when font changes
+  useEffect(() => {
+    const detectMissingGlyphs = async () => {
+      // Wait for font to load
+      try {
+        await document.fonts.load(`100px "${fontFamily}"`);
+        // Add small delay to ensure font is fully rendered
+        await new Promise(resolve => setTimeout(resolve, 100));
+      } catch (e) {
+        console.warn('Font loading check failed:', e);
+      }
+
+      const missing = new Set<string>();
+      charArray.forEach(char => {
+        if (!hasGlyph(char, fontFamily)) {
+          missing.add(char);
+        }
+      });
+      setMissingGlyphs(missing);
+    };
+
+    detectMissingGlyphs();
+  }, [fontFamily, characters]);
 
   const handleMouseEnter = (char: string, event: React.MouseEvent) => {
     setHoveredChar(char);
@@ -49,7 +107,7 @@ export default function CharacterGrid({ characters, fontFamily, theme, compareEn
   const containerWidthVw = compareEnabled ? 45 : 95;
   const calculatedFontSize = `calc((${containerWidthVw}vw / ${columnCount}) * ${cellFontScale})`;
 
-  const cellStyle: React.CSSProperties = {
+  const getCellStyle = (char: string): React.CSSProperties => ({
     width: '100%',
     aspectRatio: '1',
     display: 'flex',
@@ -59,8 +117,9 @@ export default function CharacterGrid({ characters, fontFamily, theme, compareEn
     fontSize: calculatedFontSize,
     cursor: 'pointer',
     border: `1px solid ${theme.text}10`,
-    transition: 'background-color 0.2s',
-  };
+    transition: 'background-color 0.2s, opacity 0.2s',
+    opacity: missingGlyphs.has(char) ? 0.15 : 1,
+  });
 
   const tooltipStyle: React.CSSProperties = {
     position: 'fixed',
@@ -103,7 +162,7 @@ export default function CharacterGrid({ characters, fontFamily, theme, compareEn
         {charArray.map((char, index) => (
           <div
             key={index}
-            style={cellStyle}
+            style={getCellStyle(char)}
             onMouseEnter={(e) => handleMouseEnter(char, e)}
             onMouseLeave={handleMouseLeave}
             onClick={() => handleClick(char)}
