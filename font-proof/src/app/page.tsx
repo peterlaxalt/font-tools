@@ -8,6 +8,7 @@ import ColorThemePicker from "./components/ColorThemePicker";
 import HeadlinesProof from "./components/proofs/HeadlinesProof";
 import ParagraphsProof from "./components/proofs/ParagraphsProof";
 import DiacriticsProof from "./components/proofs/DiacriticsProof";
+import LayoutsProof from "./components/proofs/LayoutsProof";
 import {
   UploadedFont,
   ProofType,
@@ -280,6 +281,14 @@ export default function Home() {
             font={activeFont}
             settings={diacriticsSettings}
             onSettingsChange={setDiacriticsSettings}
+            theme={colorTheme}
+            compareEnabled={compareEnabled}
+            comparisonFont={comparisonFont}
+          />
+        )}
+        {activeProofType === "layouts" && (
+          <LayoutsProof
+            font={activeFont}
             theme={colorTheme}
             compareEnabled={compareEnabled}
             comparisonFont={comparisonFont}

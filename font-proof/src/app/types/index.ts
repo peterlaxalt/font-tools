@@ -9,7 +9,7 @@ export interface UploadedFont {
 }
 
 // Available proof types
-export type ProofType = 'headlines' | 'paragraphs' | 'diacritics';
+export type ProofType = 'headlines' | 'paragraphs' | 'diacritics' | 'layouts';
 
 // Settings for Headlines proof
 export interface HeadlinesSettings {

@@ -20,3 +20,12 @@ input,
 textarea {
   font-family: inherit;
 }
+
+/* Hide Next.js development toast/overlay */
+#webpack-dev-server-client-overlay,
+#webpack-dev-server-client-overlay-div,
+nextjs-portal,
+[data-nextjs-toast-wrapper],
+[data-nextjs-dialog-overlay] {
+  display: none !important;
+}

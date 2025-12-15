@@ -12,6 +12,7 @@ const proofTypes: { type: ProofType; label: string }[] = [
   { type: 'headlines', label: 'Headlines' },
   { type: 'paragraphs', label: 'Paragraphs' },
   { type: 'diacritics', label: 'Diacritics' },
+  { type: 'layouts', label: 'Layouts' },
 ];
 
 export default function ProofTabs({ activeProofType, onProofTypeChange }: ProofTabsProps) {
